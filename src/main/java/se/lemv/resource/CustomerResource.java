@@ -2,11 +2,14 @@ package se.lemv.resource;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import se.lemv.model.Customer;
 import se.lemv.repository.CustomerRepository;
@@ -18,30 +21,40 @@ public class CustomerResource {
 	private static CustomerRepository customerRepository = new InMemoryRepository();
 	private static final AtomicLong customerIds = new AtomicLong(1000);
 
-	@GET
-	@Path("{id}")
-	public Response getCustomer(String id) {
-		return Response.ok(customerRepository.get(Long.parseLong(id))).build();
-	}
-	
 	@POST
 	public Response addCustomer(String content) {
+		Long id = customerIds.incrementAndGet();
 		String[] split = content.split(";");
-		Customer customer = new Customer(customerIds.incrementAndGet())
+		Customer customer = new Customer(id)
 				.setCustomerNumber(Long.parseLong(split[0]))
 				.setFirstName(split[1]).setLastName(split[2]);
+		
 		customer = customerRepository.create(customer);
-		return Response.ok(customer.toString()).build();
+		return Response.status(Status.CREATED).header("Location", "customer/" + id).build();
+	}
+	
+	@GET
+	@Path("{id}")
+	public Response getCustomer(Long id) {
+		return Response.ok(customerRepository.get(id).toString()).build();
 	}
 	
 	@PUT
 	@Path("{id}")
-	public Response updateCustomer(String content) {
+	public Response updateCustomer(@PathParam("id") Long id, String content) {
 		String[] split = content.split(";");
-		Customer customer = new Customer(customerIds.incrementAndGet())
-				.setCustomerNumber(Long.parseLong(split[0]))
+		Customer customer = new Customer(id)
+				.setCustomerNumber(id)
 				.setFirstName(split[1]).setLastName(split[2]);
 		customerRepository.update(customer.getId(), customer);
-		return Response.ok(String.format("%d\n%d\n%s %s", customer.getId(), customer.getCustomerNumber(), customer.getFirstName(), customer.getLastName())).build();
+		customer = customerRepository.get(id);
+		return Response.ok(customer.toString()).build();
+	}
+	
+	@DELETE
+	@Path("{id}")
+	public Response deleteCustomer(String id) {
+		
+		return null;
 	}
 }

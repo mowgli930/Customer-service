@@ -1,5 +1,9 @@
 package se.lemv.model;
 
+import org.springframework.core.style.ToStringCreator;
+
+import jersey.repackaged.com.google.common.base.MoreObjects.ToStringHelper;
+
 public final class Customer extends AbstractEntity {
 	
 	private String firstName;
@@ -37,6 +41,9 @@ public final class Customer extends AbstractEntity {
 		return this;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return String.format("id=%d\nCustomer Number=%d\nName=%s%s", getId(), getCustomerNumber(), getFirstName(), getLastName());
+	}
 	
 }

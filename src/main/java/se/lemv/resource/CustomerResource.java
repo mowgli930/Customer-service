@@ -36,7 +36,9 @@ public class CustomerResource {
 	@GET
 	@Path("{id}")
 	public Response getCustomer(Long id) {
-		return Response.ok(customerRepository.get(id).toString()).build();
+		System.out.println(id);
+		System.out.println(customerRepository.get(id).getFirstName());
+		return Response.ok(customerRepository.get(id).getFirstName()).build();
 	}
 	
 	@PUT
@@ -53,8 +55,8 @@ public class CustomerResource {
 	
 	@DELETE
 	@Path("{id}")
-	public Response deleteCustomer(String id) {
-		
-		return null;
+	public Response deleteCustomer(Long id) {
+		customerRepository.delete(id);
+		return Response.status(Status.NO_CONTENT).build();
 	}
 }

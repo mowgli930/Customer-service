@@ -26,7 +26,10 @@ public class InMemoryRepository implements CustomerRepository {
 
 	@Override
 	public Long update(Long id, Customer newCustomer) {
-		customers.replace(id, newCustomer);
+		Customer oldCustomer = customers.get(id);
+		oldCustomer.setCustomerNumber(newCustomer.getCustomerNumber());
+		oldCustomer.setFirstName(newCustomer.getFirstName());
+		oldCustomer.setLastName(newCustomer.getLastName());
 		return id;
 	}
 

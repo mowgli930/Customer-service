@@ -3,9 +3,12 @@ package se.lemv.repository.inMemoryRepository;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import se.lemv.model.Customer;
 import se.lemv.repository.CustomerRepository;
 
+@Component
 public class InMemoryRepository implements CustomerRepository {
 
 	private Map<Long, Customer> customers = new HashMap<Long, Customer>();
@@ -28,7 +31,7 @@ public class InMemoryRepository implements CustomerRepository {
 	}
 
 	@Override
-	public Customer delete(Long id) {
+	public Customer remove(Long id) {
 		Customer deletedCustomer = customers.get(id);
 		customers.remove(id);
 		return deletedCustomer;

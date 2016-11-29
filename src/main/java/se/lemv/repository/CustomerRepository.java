@@ -10,6 +10,6 @@ public interface CustomerRepository {
 	
 	public Long update(Long id, Customer newCustomer);
 	
-	public Customer delete(Long id);
+	public Customer remove(Long id);
 	
 }

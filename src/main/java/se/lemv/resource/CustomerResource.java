@@ -11,14 +11,18 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import se.lemv.model.Customer;
-import se.lemv.repository.CustomerRepository;
-import se.lemv.repository.inMemoryRepository.InMemoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import se.lemv.model.Customer;
+import se.lemv.service.CustomerService;
+
+@Component
 @Path("customer")
 public class CustomerResource {
 	
-	private static CustomerRepository customerRepository = new InMemoryRepository();
+	@Autowired
+	private CustomerService customerService;
 	private static final AtomicLong customerIds = new AtomicLong(1000);
 
 	@POST
@@ -29,17 +33,19 @@ public class CustomerResource {
 				.setCustomerNumber(Long.parseLong(split[0]))
 				.setFirstName(split[1]).setLastName(split[2]);
 		
-		customer = customerRepository.create(customer);
+		customer = customerService.create(customer);
 		return Response.status(Status.CREATED).header("Location", "customer/" + id).build();
 	}
 	
 	@GET
 	@Path("{id}")
-	public Response getCustomer(Long id) {
-		System.out.println(id);
-		System.out.println(customerRepository.get(id).getFirstName());
-		return Response.ok(customerRepository.get(id).getFirstName()).build();
+	public Response getCustomer(@PathParam("id") Long id) {
+		return Response.ok(customerService.get(id).toString()).build();
 	}
+	
+//	@GET
+//	@Path("{id}")
+//	public Response getCustomers()
 	
 	@PUT
 	@Path("{id}")
@@ -48,15 +54,15 @@ public class CustomerResource {
 		Customer customer = new Customer(id)
 				.setCustomerNumber(id)
 				.setFirstName(split[1]).setLastName(split[2]);
-		customerRepository.update(customer.getId(), customer);
-		customer = customerRepository.get(id);
+		customerService.update(customer.getId(), customer);
+		customer = customerService.get(id);
 		return Response.ok(customer.toString()).build();
 	}
 	
 	@DELETE
 	@Path("{id}")
-	public Response deleteCustomer(Long id) {
-		customerRepository.delete(id);
+	public Response deleteCustomer(@PathParam("id") Long id) {
+		customerService.remove(id);
 		return Response.status(Status.NO_CONTENT).build();
 	}
 }

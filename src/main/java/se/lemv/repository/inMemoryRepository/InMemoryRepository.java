@@ -44,21 +44,25 @@ public class InMemoryRepository implements CustomerRepository {
 
 	@Override //TODO this method should not be like this
 	public List<Customer> getCustomers(int page, int size, String sort) {
+		List<Customer> list = new ArrayList<Customer>();
 		boolean asc;
+
 		if(sort.equals("asc"))
 			asc = true;
 		else
 			asc = false;
-		List<Customer> list = new ArrayList<Customer>();
+
+		
 		for(Customer c: customers.values()) {
-			if(asc) {
-				if(c.getId() >= page && c.getId() <= page+size)
+				if(c.getId() >= page && c.getId() < page+size)
 					list.add(c);
+		}
+		if(!asc) {
+			List<Customer> reversed = new ArrayList<Customer>();
+			for(int i = 0; i < list.size(); i++) {
+				reversed.add(list.get(size-1-i));
 			}
-			else if(!asc) {
-				if(c.getId() <= page+size && c.getId() >= page)
-					list.add(c);
-			}
+			list = reversed;
 		}
 		return list;
 	}

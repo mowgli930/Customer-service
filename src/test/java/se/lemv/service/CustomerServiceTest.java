@@ -39,8 +39,9 @@ public class CustomerServiceTest {
 	
 	@Test
 	public void canGet2Customers() {
-		List<Customer> customers = service.getCustomers(1001, 2, "asc");
-		assertEquals(customers.size(), 2);
+		int size = 2;
+		List<Customer> customers = service.getCustomers(1001, size, "asc");
+		assertEquals(customers.size(), size);
 	}
 	
 	@Test

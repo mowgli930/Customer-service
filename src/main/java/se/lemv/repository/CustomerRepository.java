@@ -1,6 +1,5 @@
 package se.lemv.repository;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 import se.lemv.model.Customer;

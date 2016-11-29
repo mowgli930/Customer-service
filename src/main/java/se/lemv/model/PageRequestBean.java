@@ -1,5 +1,7 @@
 package se.lemv.model;
 
+import java.util.Arrays;
+
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 
@@ -16,6 +18,13 @@ public class PageRequestBean {
 	@DefaultValue("asc")
 	private String sort;
 	
+	public static PageRequestBean valueOf(String value) {
+		String[] split = value.split("&?");
+		for(String s: Arrays.asList(split)) {
+			System.out.println(s);
+		}
+		return null;
+	}
 	
 	public int getPage() {
 		return page;

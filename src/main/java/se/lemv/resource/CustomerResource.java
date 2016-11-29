@@ -43,12 +43,17 @@ public class CustomerResource {
 	@Path("{id}")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getCustomerAsPlain(@PathParam("id") Long id) {
-		return Response.ok(asString(service.get(id))).build();
+		Customer customer = service.get(id);
+		if(customer != null)
+			return Response.ok(asString(customer)).build();
+		else
+			return Response.status(Status.NOT_FOUND).build();
 	}
 
 	@GET
-	@Path("all") //http://127.0.0.1:8080/all?page=1001?size=3?sort=asc
+	@Path("all") //http://127.0.0.1:8080/all?page=1001?&size=3&?sort=asc
 	public Response getCustomersAsPlain(@BeanParam PageRequestBean request) {
+		System.out.printf("%s\n%s\n%s", request.getPage(), request.getSize(), request.getSort());
 		List<Customer> customers = service.getCustomers(request.getPage(), request.getSize(), request.getSort());
 		StringBuilder allCustomers = new StringBuilder();
 		customers.forEach(c -> allCustomers.append(asString(c) + "\n"));
@@ -59,7 +64,11 @@ public class CustomerResource {
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getCustomerAsXml(@PathParam("id") Long id) {
-		return Response.ok(asXml(service.get(id))).build();
+		Customer customer = service.get(id);
+		if(customer != null)
+			return Response.ok(asXml(customer)).build();
+		else
+			return Response.status(Status.NOT_FOUND).build();
 	}
 	
 	@PUT

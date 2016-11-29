@@ -23,15 +23,11 @@ public class CustomerServiceTest {
 		service.save(c1);
 		service.save(c2);
 		service.save(c3);
-		System.out.println(CustomerParser.asString(service.get(1001L)));
-		System.out.println(CustomerParser.asString(service.get(1002L)));
-		System.out.println(CustomerParser.asString(service.get(1003L)));
 	}
 	
 	@Test
 	public void canGetCustomers() {
 		List<Customer> customers = service.getCustomers(1001, 3, "asc");
-		customers.forEach(c -> System.out.println(CustomerParser.asString(c)));
 		assertEquals(c1, customers.get(0));
 		assertEquals(c2, customers.get(1));
 		assertEquals(c3, customers.get(2));

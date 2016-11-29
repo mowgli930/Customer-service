@@ -43,7 +43,8 @@ public final class Customer extends AbstractEntity {
 			return true;
 		else if(obj instanceof Customer) {
 			Customer otherCustomer = (Customer) obj;
-			return customerNumber.equals(otherCustomer.customerNumber) &&
+			return super.id.equals(otherCustomer.getId()) &&
+					customerNumber.equals(otherCustomer.customerNumber) &&
 					firstName.equals(otherCustomer.firstName) &&
 					lastName.equals(otherCustomer.lastName);
 		}
@@ -54,6 +55,7 @@ public final class Customer extends AbstractEntity {
 	@Override
 	public int hashCode() {
 		int result = 17;
+		result += 31 * super.id.hashCode();
 		result += 31 * customerNumber.hashCode();
 		result += 31 * firstName.hashCode();
 		result += 31 * lastName.hashCode();

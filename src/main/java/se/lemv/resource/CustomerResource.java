@@ -41,7 +41,7 @@ public class CustomerResource {
 	public Response getCustomerAsPlain(@PathParam("id") Long id) {
 		return Response.ok(asString(service.get(id))).build();
 	}
-	
+
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
@@ -54,9 +54,7 @@ public class CustomerResource {
 	public Response updateCustomer(@PathParam("id") Long id, String content) {
 		Customer customer = fromString(content);
 		service.update(id, customer);
-		System.out.println(customer.getId());
 		customer = service.get(id);
-		System.out.println(customer.getId());
 		return Response.ok(asString(customer)).build();
 	}
 	

@@ -1,5 +1,6 @@
 package se.lemv.service;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +40,9 @@ public class CustomerService {
 	public Customer remove(Long id) {
 		return customerRepository.remove(id);
 	}
+	
+	public List<Customer> getCustomers(int page, int size, String sort) {
+		return customerRepository.getCustomers(page, size, sort);
+	}
+	
 }

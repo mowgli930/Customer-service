@@ -1,5 +1,8 @@
 package se.lemv.repository;
 
+import java.awt.print.Pageable;
+import java.util.List;
+
 import se.lemv.model.Customer;
 
 public interface CustomerRepository {
@@ -11,5 +14,7 @@ public interface CustomerRepository {
 	public Long update(Long id, Customer newCustomer);
 	
 	public Customer remove(Long id);
+	
+	public List<Customer> getCustomers(int page, int size, String sort);
 	
 }

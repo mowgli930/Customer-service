@@ -4,6 +4,9 @@ import static se.lemv.model.CustomerParser.asString;
 import static se.lemv.model.CustomerParser.asXml;
 import static se.lemv.model.CustomerParser.fromString;
 
+import java.util.List;
+
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import se.lemv.model.Customer;
+import se.lemv.model.PageRequestBean;
 import se.lemv.service.CustomerService;
 
 @Component
@@ -42,6 +46,15 @@ public class CustomerResource {
 		return Response.ok(asString(service.get(id))).build();
 	}
 
+	@GET
+	@Path("all") //http://127.0.0.1:8080/all?page=1001?size=3?sort=asc
+	public Response getCustomersAsPlain(@BeanParam PageRequestBean request) {
+		List<Customer> customers = service.getCustomers(request.getPage(), request.getSize(), request.getSort());
+		StringBuilder allCustomers = new StringBuilder();
+		customers.forEach(c -> allCustomers.append(asString(c) + "\n"));
+		return Response.ok(allCustomers.toString()).build();
+	}
+	
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)

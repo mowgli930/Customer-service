@@ -1,9 +1,5 @@
 package se.lemv.model;
 
-import org.springframework.core.style.ToStringCreator;
-
-import jersey.repackaged.com.google.common.base.MoreObjects.ToStringHelper;
-
 public final class Customer extends AbstractEntity {
 	
 	private String firstName;
@@ -42,8 +38,25 @@ public final class Customer extends AbstractEntity {
 	}
 	
 	@Override
-	public String toString() {
-		return String.format("id=%d\nCustomer Number=%d\nName=%s%s", getId(), getCustomerNumber(), getFirstName(), getLastName());
+	public boolean equals(Object obj) {
+		if(this == obj) 
+			return true;
+		else if(obj instanceof Customer) {
+			Customer otherCustomer = (Customer) obj;
+			return customerNumber.equals(otherCustomer.customerNumber) &&
+					firstName.equals(otherCustomer.firstName) &&
+					lastName.equals(otherCustomer.lastName);
+		}
+		else
+			return false;
 	}
 	
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result += 31 * customerNumber.hashCode();
+		result += 31 * firstName.hashCode();
+		result += 31 * lastName.hashCode();
+		return result;
+	}
 }

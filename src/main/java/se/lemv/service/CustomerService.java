@@ -1,5 +1,7 @@
 package se.lemv.service;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,15 +11,21 @@ import se.lemv.repository.CustomerRepository;
 @Component
 public class CustomerService {
 
-	public final CustomerRepository customerRepository;
+	private final CustomerRepository customerRepository;
+	private final AtomicLong customerIds = new AtomicLong(1000);
+
 	
 	@Autowired
 	public CustomerService(CustomerRepository customerRepository) {
 		this.customerRepository = customerRepository;
 	}
 
-	public Customer create(Customer customer) {
-		return customerRepository.create(customer);
+	public Customer save(Customer customer) {
+		Long id = customerIds.incrementAndGet();
+		Customer c = new Customer(id).setCustomerNumber(customer.getCustomerNumber())
+				.setFirstName(customer.getFirstName())
+				.setLastName(customer.getLastName());
+		return customerRepository.save(c);
 	}
 
 	public Customer get(Long id) {

@@ -14,7 +14,7 @@ public class InMemoryRepository implements CustomerRepository {
 	private Map<Long, Customer> customers = new HashMap<Long, Customer>();
 	
 	@Override
-	public Customer create(Customer customer) {
+	public Customer save(Customer customer) {
 		customers.put(customer.getId(), customer);
 		return customer;
 	}

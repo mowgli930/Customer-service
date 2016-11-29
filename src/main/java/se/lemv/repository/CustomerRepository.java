@@ -4,7 +4,7 @@ import se.lemv.model.Customer;
 
 public interface CustomerRepository {
 	
-	public Customer create(Customer customer);
+	public Customer save(Customer customer);
 	
 	public Customer get(Long id);
 	

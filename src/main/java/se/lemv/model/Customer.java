@@ -61,4 +61,9 @@ public final class Customer extends AbstractEntity {
 		result += 31 * lastName.hashCode();
 		return result;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s %s %d %d", this.firstName, this.lastName, this.id, this.customerNumber);
+	}
 }

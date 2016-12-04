@@ -3,10 +3,12 @@ package se.lemv.resource;
 import static se.lemv.model.CustomerParser.asString;
 import static se.lemv.model.CustomerParser.asXml;
 import static se.lemv.model.CustomerParser.fromString;
+import static se.lemv.model.CustomerParser.fromXml;
 
 import java.util.List;
 
 import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -33,14 +35,25 @@ public class CustomerResource {
 	private CustomerService service;
 
 	@POST
-	public Response addCustomer(String content) {
+	@Path("text")
+	@Consumes(MediaType.TEXT_PLAIN)
+	public Response addCustomerAsPlain(String content) {
 		Customer customer = fromString(content);
 		customer = service.save(customer);
 		return Response.status(Status.CREATED).header("Location", "customer/" + customer.getId()).build();
 	}
 	
+	@POST
+	@Path("xml")
+	@Consumes(MediaType.APPLICATION_XML) //Can be created with Id but will be given a new one
+	public Response addCustomerAsXml(String content) {
+		Customer customer = fromXml(content);
+		customer = service.save(customer);
+		return Response.status(Status.CREATED).header("Location", "customer/" + customer.getId()).build();
+	}
+	
 	@GET
-	@Path("{id}")
+	@Path("text/{id}")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getCustomerAsPlain(@PathParam("id") Long id) {
 		Customer customer = service.get(id);
@@ -51,22 +64,41 @@ public class CustomerResource {
 	}
 
 	@GET
-	@Path("all") //http://127.0.0.1:8080/all?page=1001?&size=3&?sort=asc
-	public Response getCustomersAsPlain(@BeanParam PageRequestBean request) {
+	@Path("text/all") //http://127.0.0.1:8080/text/all?page=1001&size=3&sort=asc
+	public Response getAllCustomersAsPlain(@BeanParam PageRequestBean request) {
 		System.out.printf("%s\n%s\n%s", request.getPage(), request.getSize(), request.getSort());
 		List<Customer> customers = service.getCustomers(request.getPage(), request.getSize(), request.getSort());
-		StringBuilder allCustomers = new StringBuilder();
-		customers.forEach(c -> allCustomers.append(asString(c) + "\n"));
-		return Response.ok(allCustomers.toString()).build();
+		
+		if(customers != null) {
+			StringBuilder allCustomers = new StringBuilder();
+			customers.forEach(c -> allCustomers.append(asString(c) + "\n"));
+			return Response.ok(allCustomers.toString()).build();			
+		}
+		else
+			return Response.status(Status.NOT_FOUND).build();
 	}
 	
 	@GET
-	@Path("{id}")
+	@Path("xml/{id}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getCustomerAsXml(@PathParam("id") Long id) {
 		Customer customer = service.get(id);
 		if(customer != null)
 			return Response.ok(asXml(customer)).build();
+		else
+			return Response.status(Status.NOT_FOUND).build();
+	}
+	
+	@GET
+	@Path("xml/all") //http://127.0.0.1:8080/text/all?page=1001&size=3&sort=asc
+	public Response getAllCustomersAsXml(@BeanParam PageRequestBean request) {
+		List<Customer> customers = service.getCustomers(request.getPage(), request.getSize(), request.getSort());
+		
+		if(customers != null) {
+			StringBuilder allCustomers = new StringBuilder();
+			customers.forEach(c -> allCustomers.append(asXml(c) + "\n"));
+			return Response.ok(allCustomers.toString()).build();
+		}
 		else
 			return Response.status(Status.NOT_FOUND).build();
 	}
